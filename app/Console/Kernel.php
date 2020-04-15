@@ -22,10 +22,8 @@ class Kernel extends ConsoleKernel
      * @param  \Illuminate\Console\Scheduling\Schedule  $schedule
      * @return void
      */
-    protected function schedule(Schedule $schedule)
-    {
-//        $schedule->command('price:update')->weekly();
-        $schedule->command('price:update')->dailyAt('17:37');
-
+    protected function schedule(Schedule $schedule){
+        
+        $schedule->command('price:update')->weekly();
     }
 }
