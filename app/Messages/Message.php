@@ -23,4 +23,10 @@ class Message {
     const DB_NO_ENTRIES =  ['message' => 'Nenhum registro encontrado.'];
     
     const DB_ERROR = ['message' => 'Erro ao se conectar ao banco de dados.'];
+    
+    const UPDATE_SUCCESS = ['message' => 'Atualizado com sucesso.'];
+    
+    const UPDATE_FAILURE = ['message' => 'Nao foi possivel atualizar.'];
+    
+    const UPDATE_NULL = ['message' => 'Nao ha o que atualizar.'];
 }
