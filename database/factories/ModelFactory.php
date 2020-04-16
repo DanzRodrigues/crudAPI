@@ -18,7 +18,10 @@ use Faker\Generator as Faker;
 
 $factory->define(Funcionario::class, function (Faker $faker) {
     return [
-        'name' => $faker->name,
+        'CPF' => $faker->shuffleString('01234567898'),
+        'nome' => $faker->name,
         'email' => $faker->email,
+        'senha' => $faker->password,
+        'salario' => $faker->randomFloat(null, 900, 10000)
     ];
 });
