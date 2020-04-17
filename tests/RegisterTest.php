@@ -15,7 +15,7 @@ class RegisterTest extends TestCase
 {
     public function testRegister()
     {
-        $funcionario = factory('App\Models\Funcionario')->create();
+        $funcionario = factory('App\Models\Funcionario')->make();
 
         $this->actingAs($funcionario)->post('api/register',[
             'CPF' => $funcionario->CPF,

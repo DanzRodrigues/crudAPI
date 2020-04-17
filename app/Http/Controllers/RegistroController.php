@@ -102,8 +102,14 @@ class RegistroController extends Controller {
 
     public function destroy($id) {
         try {
-            $this->model->find($id)->delete();
-            return response()->json(null, Response::HTTP_OK);
+            $registro = $this->model->find($id);
+        
+            if($registro == null){
+                return response()->json(Message::DB_NO_ENTRIES, Response::HTTP_OK);
+            } else {
+                $registro->delete();
+                return response()->json(Message::DELETE_SUCCESS, Response::HTTP_OK);
+            }            
         } catch (QueryException $exc) {
             return response()->json(Message::DB_ERROR, Response::HTTP_INTERNAL_SERVER_ERROR);
         }

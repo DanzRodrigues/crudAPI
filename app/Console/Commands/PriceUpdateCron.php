@@ -13,8 +13,13 @@ use App\Http\Controllers\ProdutoController;
 use App\Models\Produto;
 use Illuminate\Http\Request;
 
-class PriceUpdateCron extends Command{
-    
+/**
+ * Description of InsertClienteCron
+ *
+ * @author danie
+ */
+class PriceUpdateCron extends Command
+{
     protected $signature = "price:update";
 
     protected $description = "Weekly updates the price of every registered product product.";
@@ -24,10 +29,9 @@ class PriceUpdateCron extends Command{
         parent::__construct();
     }
 
-    public function handle(){
-        
+    public function handle()
+    {        
         $produto = new ProdutoController(new Produto());
-
         echo $produto->updatePrice();
     }
 }

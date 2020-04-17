@@ -33,14 +33,11 @@ class ProdutoController extends Controller
             $produtos = $this->model->all();
 
             if(count($produtos)>0){
-                
                 return response()->json($produtos, Response::HTTP_OK);
             } else {
-                
                 return response()->json(Message::DB_NO_ENTRIES, Response::HTTP_OK);
             }
         } catch(QueryException $exc){
-            
             return response()->json(Message::DB_ERROR, Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -50,14 +47,11 @@ class ProdutoController extends Controller
             $produto = $this->model->find($id);
 
             if($produto==null){
-                
                 return response()->json(Message::DB_NO_ENTRIES, Response::HTTP_OK);
             } else {
-                
                 return response()->json($produto, Response::HTTP_OK);
             }
         } catch(QueryException $exc){
-            
             return response()->json(Message::DB_ERROR, Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -67,16 +61,12 @@ class ProdutoController extends Controller
             $validator = Validator::make($request->all(), Validation::RULE_PRODUTO);
 
             if($validator->fails()){
-                
                 return response()->json($validator->errors(), Response::HTTP_BAD_REQUEST);
-            } else {
-                
-                $produto = $this->model->create($request->all());
-                
+            } else {                
+                $produto = $this->model->create($request->all());                
                 return response()->json($produto, Response::HTTP_CREATED);
             }    
-        } catch(QueryException $exc){
-            
+        } catch(QueryException $exc){            
             return response()->json(Message::DB_ERROR, Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -85,18 +75,19 @@ class ProdutoController extends Controller
         try{
             $validator = Validator::make($request->all(), Validation::RULE_PRODUTO);
 
-            if($validator->fails()){
-                
+            if($validator->fails()){                
                 return response()->json($validator->errors(), Response::HTTP_BAD_REQUEST);
             } else {
+                $produto = $this->model->find($id);
                 
-                $produto = $this->model->find($id)
-                    ->update($request->all());
-
-                return response()->json($produto, Response::HTTP_OK);
+                if($produto == null){
+                    return response()->json(Message::DB_NO_ENTRIES, Response::HTTP_OK);
+                } else {
+                    $produto->update($request->all());
+                    return response()->json($produto, Response::HTTP_OK);
+                }                    
             }
-        } catch(QueryException $exc){
-            
+        } catch(QueryException $exc){            
             return response()->json(Message::DB_ERROR, Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -105,11 +96,9 @@ class ProdutoController extends Controller
         try {
             $produtos = $this->model->all();
 
-            if($produtos == null){
-                
+            if($produtos == null){                
                 return response(json(Message::UPDATE_NULL, Response::HTTP_OK));
-            } else {
-            
+            } else {            
                 foreach ($produtos as $prod){
                     $prod->preco += $prod->preco*(0.02);
                     $prod->save();
@@ -126,11 +115,15 @@ class ProdutoController extends Controller
     
     public function destroy($id){
         try{
-            $this->model->find($id)->delete();
+            $produto = $this->model->find($id);
             
-            return response()->json(null, Response::HTTP_OK);
-        } catch(QueryException $exc){
-            
+            if($produto == null){
+                return response()->json(Message::DB_NO_ENTRIES, Response::HTTP_OK);
+            } else {
+                $produto->delete();            
+                return response()->json(Message::DELETE_SUCCESS, Response::HTTP_OK);
+            }            
+        } catch(QueryException $exc){            
             return response()->json(Message::DB_ERROR, Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }

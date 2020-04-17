@@ -21,17 +21,17 @@ class Validation {
     ];
     const RULE_FUNCIONARIO = [
         'CPF' => 'required | max:11 | min:11',
-        'nome' => 'required | max:30 | min:2',
-        'email' => 'required | max:30 | min:2',
+        'nome' => 'required | max:100 | min:2',
+        'email' => 'required | max:100 | min:2',
         'senha' => 'required',
         'salario' => 'required'
     ];
     
     const RULE_CLIENTE = [
         'CPF' => 'required | max:11 | min:11',
-        'nome' => 'required | max:30 | min:2',
-        'sobrenome' => 'required | max:30 | min:2',
-        'email' => 'required | max:40 | min:2'
+        'nome' => 'required | max:100 | min:2',
+        'sobrenome' => 'required | max:100 | min:2',
+        'email' => 'required | max:100 | min:2'
     ];
     
     const RULE_PRODUTO = [
