@@ -15,7 +15,8 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @author danie
  */
-class Cliente extends Model {
+class Cliente extends Model 
+{
     
     protected $table = "cliente";
     protected $primaryKey = 'CPF';

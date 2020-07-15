@@ -7,23 +7,23 @@ para autenticação de usuário:
 
 Para listar os registros de cada tabela:
 
-- .../public/api/funcionarios
-- .../public/api/clientes
-- .../public/api/produtos
-- .../public/api/registros
+- ../api/funcionarios
+- ../api/clientes
+- ../api/produtos
+- ../api/registros
 
 
 Para GET, PUT ou DELETE:
 
-- .../public/api/funcionario/{id}
-- .../public/api/cliente/{id}
-- .../public/api/produto/{id}
-- .../public/api/registro/{id}
+- ../api/funcionario/{id}
+- ../api/cliente/{id}
+- ../api/produto/{id}
+- ../api/registro/{id}
 
 
 Para POST:
 
-- .../public/api/funcionario/
-- .../public/api/cliente/
-- .../public/api/produto/
-- .../public/api/registro/
+- ../api/funcionario/
+- ../api/cliente/
+- ../api/produto/
+- ../api/registro/

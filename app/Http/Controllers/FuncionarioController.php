@@ -19,24 +19,26 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\Response;
 
-class FuncionarioController extends Controller {
-    
+class FuncionarioController extends Controller 
+{
     /**
      * Create a new controller instance.
      *
      * @return void
      */
-    public function __construct(Funcionario $funcionario){
+    public function __construct(Funcionario $funcionario)
+    {
         $this->model = $funcionario;
     }
 
-    public function getAll(){
-        try{    
+    public function getAll()
+    {
+        try {    
             $funcionarios = $this->model->all();
 
             if(count($funcionarios)>0){
                 return response()->json($funcionarios, Response::HTTP_OK);
-            } else{
+            } else {
                 return response()->json(Message::DB_NO_ENTRIES, Response::HTTP_OK);
             }
         } catch(QueryException $exc){
@@ -44,13 +46,14 @@ class FuncionarioController extends Controller {
         }
     }
     
-    public function get($id){
-        try{
+    public function get($id)
+    {
+        try {
             $funcionario = $this->model->find($id);
 
             if($funcionario==null){
                 return response()->json(Message::DB_NO_ENTRIES, Response::HTTP_OK);
-            } else{
+            } else {
                 return response()->json($funcionario, Response::HTTP_OK);
             }
         } catch(QueryException $exc){
@@ -58,61 +61,77 @@ class FuncionarioController extends Controller {
         }
     }
     
-    public function store(Request $request){
-        try{
+    public function store(Request $request)
+    {
+        try {
             $validator = Validator::make($request->all(), Validation::RULE_FUNCIONARIO);
 
             if($validator->fails()){
                 return response()->json($validator->errors(), Response::HTTP_BAD_REQUEST);
-            } else {
+            } else {                
+                $request['senha'] = \md5($request->input('senha'));
                 $funcionario = $this->model->create($request->all());
+                
                 return response()->json($funcionario, Response::HTTP_CREATED);
             }    
         } catch(QueryException $exc){
-            return response()->json(Message::DB_ERROR, Response::HTTP_INTERNAL_SERVER_ERROR);
+            return response()->json($exc->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
-    
-    public function update($id, Request $request){
-        try{
+
+    public function update($id, Request $request)
+    {
+        try {
             $validator = Validator::make($request->all(), Validation::RULE_FUNCIONARIO);
 
             if($validator->fails()){
                 return response()->json($validator->errors(), Response::HTTP_BAD_REQUEST);
             } else {
-                $funcionario = $this->model->find($id)
-                    ->update($request->all());
-
-                return response()->json($funcionario, Response::HTTP_OK);
+                $funcionario = $this->model->find($id);
+                
+                if($funcionario == null){
+                    return response()->json(Message::DB_NO_ENTRIES, Response::HTTP_OK);
+                } else {
+                    $request['senha'] = \md5($request->input('senha'));
+                    $funcionario->update($request->all());              
+                    
+                    return response()->json($funcionario, Response::HTTP_OK);    
+                }
             }
         } catch(QueryException $exc){
             return response()->json(Message::DB_ERROR, Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
     
-    public function destroy($id){
-        try{
-            $this->model->find($id)->delete();
-            return response()->json(null, Response::HTTP_OK);           
-        } catch(QueryException $exc){
+    public function destroy($id)
+    {
+        try {
+            $funcionario = $this->model->find($id);
+            
+            if($funcionario == null){
+                return response()->json(Message::DB_NO_ENTRIES, Response::HTTP_OK);
+            } else {
+                $funcionario->delete();
+                return response()->json(Message::DELETE_SUCCESS, Response::HTTP_OK);
+            }
+        } catch(QueryException $exc) {
             return response()->json(Message::DB_ERROR, Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
     
-    public function authenticate(Request $request){
+    public function authenticate(Request $request)
+    {
 
         $this->validate($request, Validation::RULE_LOGIN);
-
         $funcionario = Funcionario::where('email', $request->input('email'))->first();
+        $request['senha'] = \md5($request->input('senha'));
 
-        if(Hash::check($request->input('senha'), $funcionario->senha)){}
         if($request->input('senha') == $funcionario->senha){
-            
             $apikey = base64_encode(Str::random(40));
             Funcionario::where('email', $request->input('email'))
                     ->update(['api_key' => "$apikey"]);
 
-            return response()->json(Message::LOGIN_SUCCESS);
+            return response()->json(Message::LOGIN_SUCCESS, Response::HTTP_OK);
         } else {
             return response()->json(Message::LOGIN_FAILURE, Response::HTTP_UNAUTHORIZED);
         }

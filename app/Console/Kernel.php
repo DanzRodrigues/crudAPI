@@ -13,7 +13,8 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        //
+        'App\Console\Commands\PriceUpdateCron',
+        'App\Console\Commands\ClienteInsertCron'
     ];
 
     /**
@@ -23,7 +24,8 @@ class Kernel extends ConsoleKernel
      * @return void
      */
     protected function schedule(Schedule $schedule)
-    {
-        //
+    {        
+        $schedule->command('price:update')->weekly();
+        $schedule->command('customer:insert')->hourly();
     }
 }
